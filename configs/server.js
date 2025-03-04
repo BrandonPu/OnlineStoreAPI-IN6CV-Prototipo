@@ -5,6 +5,10 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import { dbConnection } from './mongo.js';
+import limiter from "../src/middlewares/validar-cant-peticiones.js";
+import authRoutes from "../src/auth/auth.routes.js";
+import { createAdminUser } from '../src/auth/auth.controller.js';
+import { createDefaultRoles } from "../src/role/role.controller.js";
 
 const middlewares = (app) => {
     app.use(express.urlencoded({extended: false}));
@@ -12,10 +16,11 @@ const middlewares = (app) => {
     app.use(express.json());
     app.use(helmet());
     app.use(morgan('dev'));
+    app.use(limiter);
 }
 
 const routes = (app) => {
-
+app.use("/onlineStorePu/v1/auth", authRoutes);
 }
 
 const conectarDB = async() => {
@@ -34,7 +39,9 @@ export const initServer = async() => {
 
     try {
         middlewares(app);
-        conectarDB();
+        await conectarDB();
+        await createAdminUser();
+        await createDefaultRoles();
         routes(app);
         app.listen(port);
         console.log(`Server running on port: ${port}`);
