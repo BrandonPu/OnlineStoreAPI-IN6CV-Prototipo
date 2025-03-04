@@ -137,5 +137,5 @@ export const createAdminUser = async () => {
         }
     } catch (error) {
         console.error("Error al crear el administrador por favor revisa:", error);
-    }
+    }//BrandonPu
 };
