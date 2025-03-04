@@ -23,7 +23,7 @@ export const validarJWT = async (req, res, next) => {
             })
         }
 
-        if (!usuario.estado) {
+        if (!usuario.state) {
             return res.status(401).json({
                 msg: "Token No Valido - Usuario Status: False comuniquese con el administrador"
             })

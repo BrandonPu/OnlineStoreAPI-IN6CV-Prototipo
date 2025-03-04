@@ -7,11 +7,12 @@ import morgan from 'morgan';
 import { dbConnection } from './mongo.js';
 import limiter from "../src/middlewares/validar-cant-peticiones.js";
 import authRoutes from "../src/auth/auth.routes.js";
+import userRoutes from "../src/users/user.routes.js"
 import { createAdminUser } from '../src/auth/auth.controller.js';
 import { createDefaultRoles } from "../src/role/role.controller.js";
 
 const middlewares = (app) => {
-    app.use(express.urlencoded({extended: false}));
+    app.use(express.urlencoded({ extended: false }));
     app.use(cors());
     app.use(express.json());
     app.use(helmet());
@@ -20,20 +21,21 @@ const middlewares = (app) => {
 }
 
 const routes = (app) => {
-app.use("/onlineStorePu/v1/auth", authRoutes);
+    app.use("/onlineStorePu/v1/auth", authRoutes);
+    app.use("/onlineStorePu/v1/user", userRoutes);
 }
 
-const conectarDB = async() => {
-    try{
+const conectarDB = async () => {
+    try {
         await dbConnection();
         console.log("Conexión a la base de datos exitosa");
-    }catch(error){
+    } catch (error) {
         console.error('Error conectando a la base de datos', error);
         process.exit(1);
     }
 }
 
-export const initServer = async() => {
+export const initServer = async () => {
     const app = express();
     const port = process.env.PORT || 3000;
 
